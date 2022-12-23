@@ -17,7 +17,7 @@ This pattern (also known as the Elm architecture) breaks down an app into 4 main
 - **init**: A function that return the initial state
 - **update**: A function that gets messages, the current state and computes and returns a new state (reducer). Runs whenever events happen.
 - **view**: A function model, the current state and computes and returns a new state (reducer). Runs whenever the state changes.
-- **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages.
+- **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the state changes.
 
 ## Example usage
 
