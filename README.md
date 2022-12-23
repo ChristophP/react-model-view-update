@@ -62,4 +62,9 @@ function ResetButton() {
 app.run(document.getElementById("root"));
 ```
 
+## API
+
+- `createApp({ init, update, view, subscriptions })`: Create an app.
+- `app.run(domNode)`: Render app into the passed DOM node.
+- `app.kill()`: Destroy the app and remove any rendered parts and leftover subscriptions.
 
