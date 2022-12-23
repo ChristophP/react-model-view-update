@@ -2,13 +2,15 @@
 
 A React microframework for pure state management and managed side effects. Inspired by the [Elm architecture](https://guide.elm-lang.org/architecture/), no Redux needed. No dependencies other than React itself.
 
+This is currently a work in progress!
+
 ## Why?
 
 React is univeral but leaves a lot of open questions regarding how to manage application state and side-effects.
 For this reason a multitude of libraries like `redux`, `redux-thunk`, `redux-saga` etc have emerged, which all come with a dependency footprint, boiler plate code, and up front planning on which libraries to select.
 Wouldn't it be nice to have a simple setup that works for (almost) all cases with a single dependency and minimal boiler plate?
 
-## What is Model-Update-View
+## What is Model-Update-View?
 
 This pattern (also known as the Elm architecture) breaks down an app into 4 main functions.
 
@@ -17,7 +19,7 @@ This pattern (also known as the Elm architecture) breaks down an app into 4 main
 - **view**: A function model, the current state and computes and returns a new state (reducer). Runs whenever the state changes.
 - **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages.
 
-## Example use
+## Example usage
 
 ```js
 import React from "react";
