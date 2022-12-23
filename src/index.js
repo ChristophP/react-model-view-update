@@ -1,6 +1,15 @@
 import React from "react";
 import { createApp, useMsg } from "./model-update-view";
 
+function documentClickSubscription(model, msg) {
+  const listener = () => msg("documentClick");
+  document.addEventListener("click", listener);
+  return () => {
+    // return unsubscribe function
+    document.removeEventListener("click", listener);
+  };
+}
+
 const app = createApp({
   init: 0,
   update: (model, action) => {
@@ -11,6 +20,8 @@ const app = createApp({
         return model - 1;
       case "reset":
         return 0;
+      case "documentClick":
+        return model + 5;
       default:
         throw new Error(`Unknown action "${action.type}"`);
     }
@@ -25,8 +36,9 @@ const app = createApp({
       </div>
     );
   },
-  subscriptions(model, msg) {
-    return null;
+  subscriptions(model) {
+    // listen to document clicks, unsubscribe if model is >= 30
+    return model < 30 ? [documentClickSubscription] : [];
   },
 });
 
