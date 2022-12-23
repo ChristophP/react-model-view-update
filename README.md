@@ -1,0 +1,63 @@
+# React Model-Update-View
+
+A React microframework for pure state management and managed side effects. Inspired by the [Elm architecture](https://guide.elm-lang.org/architecture/), no Redux needed. No dependencies other than React itself.
+
+## Why?
+
+React is univeral but leaves a lot of open questions regarding how to manage application state and side-effects.
+For this reason a multitude of libraries like `redux`, `redux-thunk`, `redux-saga` etc have emerged, which all come with a dependency footprint, boiler plate code, and up front planning on which libraries to select.
+Wouldn't it be nice to have a simple setup that works for (almost) all cases with a single dependency and minimal boiler plate?
+
+## What is Model-Update-View
+
+This pattern (also known as the Elm architecture) breaks down an app into 4 main functions.
+
+- **init**: A function that return the initial state
+- **update**: A function that gets messages, the current state and computes and returns a new state (reducer). Runs whenever events happen.
+- **view**: A function model, the current state and computes and returns a new state (reducer). Runs whenever the state changes.
+- **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages.
+
+## Example use
+
+```js
+import React from "react";
+import { createApp, useMsg } from "./model-update-view";
+
+const app = createApp({
+  init: 0,
+  update: (model, action) => {
+    switch (action.type) {
+      case "plus":
+        return model + 1;
+      case "minus":
+        return model - 1;
+      case "reset":
+        return 0;
+      default:
+        throw new Error(`Unknown action "${action.type}"`);
+    }
+  },
+  view(model, msg) {
+    return (
+      <div>
+        <h2> {model}</h2>
+        <button onClick={() => msg("plus")}> +</button>
+        <button onClick={() => msg("minus")}> -</button>
+        <ResetButton />
+      </div>
+    );
+  },
+  subscriptions(model, msg) {
+    return null;
+  },
+});
+
+function ResetButton() {
+  const msg = useMsg();
+  return <button onClick={() => msg("reset")}> Reset </button>;
+}
+
+app.run(document.getElementById("root"));
+```
+
+
