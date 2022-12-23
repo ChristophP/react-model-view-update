@@ -25,6 +25,9 @@ const app = createApp({
       </div>
     );
   },
+  subscriptions(model, msg) {
+    return null;
+  },
 });
 
 function ResetButton() {
