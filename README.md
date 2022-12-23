@@ -67,4 +67,5 @@ app.run(document.getElementById("root"));
 - `createApp({ init, update, view, subscriptions })`: Create an app.
 - `app.run(domNode)`: Render app into the passed DOM node.
 - `app.kill()`: Destroy the app and remove any rendered parts and leftover subscriptions.
+- `useMsg()`: A hook to get the `msg()` function, to trigger `update()`. Think of `msg()` like `dispatch()` but with an easier signature: `msg("msgName", optionalPayload)` is equivalent to `dispatch({ type: "msgName", payload: optionalPayload })`
 
