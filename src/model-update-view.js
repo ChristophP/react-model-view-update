@@ -15,6 +15,7 @@ function useUpdate(reducer, initState) {
   const msg = useCallback(
     (name, payload) => {
       const [nextState, effects] = reducer(state, { type: name, payload });
+      console.log(nextState, effects);
       setState(nextState);
       effects.forEach((fx) => {
         if (typeof fx === "function") {
@@ -36,7 +37,7 @@ function createSubscriptionsManager() {
     const subs = mapStateToSubs(state);
     // if new value is there, subscribe and store unsubscribe function
     subs.forEach((func) => {
-      if (!lastSubs.get(func) && typeof func === "function") {
+      if (!lastSubs.has(func) && typeof func === "function") {
         lastSubs.set(func, func(state, msg));
       }
     });
@@ -60,7 +61,7 @@ const createApp = ({ init, update, view, subscriptions }) => {
 
     useEffect(() => {
       manageSubscriptions(subscriptions, state, msg);
-    }, [state]);
+    }, [state, msg]);
 
     const jsx = view(state, msg);
     return <MsgContext.Provider value={msg}>{jsx}</MsgContext.Provider>;
