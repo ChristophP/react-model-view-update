@@ -14,16 +14,19 @@ Wouldn't it be nice to have a simple setup that works for (almost) all cases wit
 
 This pattern (also known as the Elm architecture) breaks down an app into 4 main functions.
 
-- **init**: A function that return the initial state
+- **init**: An initial value for your state
 - **update**: A function that gets messages, the current state and computes and returns a new state (reducer). Runs whenever events happen.
-- **view**: A function model, the current state and computes and returns a new state (reducer). Runs whenever the state changes.
+- **view**: A function that gets the model and a message dispatching function and returns some JSX.
 - **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the state changes.
 
 ## Example usage
 
+See the `examples/` folder.
+
 ```js
 import React from "react";
-import { createApp, useMsg } from "./model-update-view";
+import ReactDOM from "react-dom/client";
+import { createApp, useMsg } from "../../src/model-update-view";
 
 function documentClickSubscription(model, msg) {
   const listener = () => msg("documentClick");
@@ -34,18 +37,22 @@ function documentClickSubscription(model, msg) {
   };
 }
 
-const app = createApp({
+function logEffect(text) {
+  return (msg) => console.log(text);
+}
+
+const App = createApp({
   init: 0,
-  update: (model, action) => {
+  update(model, action) {
     switch (action.type) {
       case "plus":
-        return model + 1;
+        return [model + 1, [logEffect("plus")]];
       case "minus":
-        return model - 1;
+        return [model - 1, [logEffect("minus")]];
       case "reset":
-        return 0;
+        return [0, []];
       case "documentClick":
-        return model + 5;
+        return [model + 5, []];
       default:
         throw new Error(`Unknown action "${action.type}"`);
     }
@@ -62,7 +69,7 @@ const app = createApp({
   },
   subscriptions(model) {
     // listen to document clicks, unsubscribe if model is >= 30
-    return model < 30 ? [documentClickSubscription] : [];
+    return false && model < 30 ? [documentClickSubscription] : [];
   },
 });
 
@@ -71,13 +78,12 @@ function ResetButton() {
   return <button onClick={() => msg("reset")}> Reset </button>;
 }
 
-app.run(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
 ```
 
 ## API
 
-- `createApp({ init, update, view, subscriptions })`: Create an app.
-- `app.run(domNode)`: Render app into the passed DOM node.
-- `app.kill()`: Destroy the app and remove any rendered parts and leftover subscriptions.
+- `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
 - `useMsg()`: A hook to get the `msg()` function, to trigger `update()`. Think of `msg()` like `dispatch()` but with an easier signature: `msg("msgName", optionalPayload)` is equivalent to `dispatch({ type: "msgName", payload: optionalPayload })`
 

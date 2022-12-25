@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import ReactDOM from "react-dom/client";
 
 // msg triggering
 const MsgContext = React.createContext(null);
@@ -15,7 +14,6 @@ function useUpdate(reducer, initState) {
   const msg = useCallback(
     (name, payload) => {
       const [nextState, effects] = reducer(state, { type: name, payload });
-      console.log(nextState, effects);
       setState(nextState);
       effects.forEach((fx) => {
         if (typeof fx === "function") {
@@ -52,7 +50,7 @@ function createSubscriptionsManager() {
   };
 }
 
-// app setup
+// app factory
 const createApp = ({ init, update, view, subscriptions }) => {
   const manageSubscriptions = createSubscriptionsManager();
 
@@ -67,18 +65,7 @@ const createApp = ({ init, update, view, subscriptions }) => {
     return <MsgContext.Provider value={msg}>{jsx}</MsgContext.Provider>;
   }
 
-  let root;
-  return {
-    run(node) {
-      root = ReactDOM.createRoot(node);
-      root.render(<App />);
-    },
-    kill() {
-      if (root) {
-        root.unmount();
-      }
-    },
-  };
+  return App;
 };
 
 export { createApp, useMsg };
