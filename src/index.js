@@ -10,18 +10,20 @@ function documentClickSubscription(model, msg) {
   };
 }
 
+const logEffect = (text) => (msg) => console.log(text);
+
 const app = createApp({
   init: 0,
   update: (model, action) => {
     switch (action.type) {
       case "plus":
-        return model + 1;
+        return [model + 1, [logEffect("plus"), logEffect("plus again")]];
       case "minus":
-        return model - 1;
+        return [model - 1, [logEffect("minus")]];
       case "reset":
-        return 0;
+        return [0, []];
       case "documentClick":
-        return model + 5;
+        return [model + 5, []];
       default:
         throw new Error(`Unknown action "${action.type}"`);
     }

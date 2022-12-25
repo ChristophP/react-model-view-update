@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import ReactDOM from "react-dom/client";
 
 // msg triggering
@@ -6,6 +6,26 @@ const MsgContext = React.createContext(null);
 
 function useMsg() {
   return useContext(MsgContext);
+}
+
+// state/effect update function
+function useUpdate(reducer, initState) {
+  const [state, setState] = useState(initState);
+
+  const msg = useCallback(
+    (name, payload) => {
+      const [nextState, effects] = reducer(state, { type: name, payload });
+      setState(nextState);
+      effects.forEach((fx) => {
+        if (typeof fx === "function") {
+          fx(msg);
+        }
+      });
+    },
+    [setState, state]
+  );
+
+  return [state, msg];
 }
 
 // subscriptions management
@@ -36,13 +56,12 @@ const createApp = ({ init, update, view, subscriptions }) => {
   const manageSubscriptions = createSubscriptionsManager();
 
   function App() {
-    const [state, dispatch] = useReducer(update, init);
-    const msg = useCallback((name, payload) =>
-      dispatch({ type: name, payload })
-    );
+    const [state, msg] = useUpdate(update, init);
+
     useEffect(() => {
       manageSubscriptions(subscriptions, state, msg);
     }, [state]);
+
     const jsx = view(state, msg);
     return <MsgContext.Provider value={msg}>{jsx}</MsgContext.Provider>;
   }
