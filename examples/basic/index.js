@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+// eslint-disable import/no-unresolved
 import { createApp, useMsg } from "../../src/model-update-view";
 
 function documentClickSubscription(model, msg) {
@@ -35,21 +36,29 @@ const App = createApp({
     return (
       <div>
         <h2> {model}</h2>
-        <button onClick={() => msg("plus")}> +</button>
-        <button onClick={() => msg("minus")}> -</button>
+        <button type="button" onClick={() => msg("plus")}>
+          +
+        </button>
+        <button type="button" onClick={() => msg("minus")}>
+          -
+        </button>
         <ResetButton />
       </div>
     );
   },
   subscriptions(model) {
     // listen to document clicks, unsubscribe if model is >= 30
-    return false && model < 30 ? [documentClickSubscription] : [];
+    return model < 30 ? [documentClickSubscription] : [];
   },
 });
 
 function ResetButton() {
   const msg = useMsg();
-  return <button onClick={() => msg("reset")}> Reset </button>;
+  return (
+    <button type="button" onClick={() => msg("reset")}>
+      Reset
+    </button>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
