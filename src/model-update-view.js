@@ -13,15 +13,22 @@ function useUpdate(reducer, initState) {
 
   const msg = useCallback(
     (name, payload) => {
-      const [nextState, effects] = reducer(state, { type: name, payload });
-      setState(nextState);
-      effects.forEach((fx) => {
-        if (typeof fx === "function") {
-          fx(msg);
-        }
+      // we need to use the callback version of setState, because otherwise two calls in the
+      // same tick might lead to unexpected updates (i.e. incrementing problem pointing to old state)
+      setState((prevState) => {
+        const [nextState, effects] = reducer(prevState, {
+          type: name,
+          payload,
+        });
+        effects.forEach((fx) => {
+          if (typeof fx === "function") {
+            fx(msg);
+          }
+        });
+        return nextState;
       });
     },
-    [setState, state]
+    [reducer, setState]
   );
 
   return [state, msg];
