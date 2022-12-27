@@ -47,30 +47,90 @@ const impl = {
   },
 };
 
-test("starts up and displays initial model", async () => {
-  const App = createApp(impl);
-  render(<App />);
+describe("basic update", () => {
+  test("starts up and displays initial model", async () => {
+    const App = createApp(impl);
+    render(<App />);
 
-  expect(screen.getByRole("heading")).toHaveTextContent("0");
+    expect(screen.getByRole("heading")).toHaveTextContent(impl.init.toString());
+  });
+
+  test("updates the state correctly, when interactions happen", async () => {
+    const App = createApp(impl);
+    render(<App />);
+
+    fireEvent.click(screen.getByText("+"));
+    expect(screen.getByRole("heading")).toHaveTextContent("1");
+  });
+
+  test("updates the state correctly, when multiple interactions happen", async () => {
+    const App = createApp(impl);
+    render(<App />);
+
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("Reset"));
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("-"));
+    expect(screen.getByRole("heading")).toHaveTextContent("2");
+  });
 });
 
-test("updates the state correctly, when interactions happen", async () => {
-  const App = createApp(impl);
-  render(<App />);
+describe("effects", () => {
+  test("runs an effect returned from the update function", async () => {
+    const effectFn = jest.fn();
+    const App = createApp({
+      ...impl,
+      update(model) {
+        return [model, [effectFn]];
+      },
+    });
+    render(<App />);
 
-  fireEvent.click(screen.getByText("+"));
-  expect(screen.getByRole("heading")).toHaveTextContent("1");
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("+"));
+    expect(effectFn).toHaveBeenCalledTimes(2);
+  });
+
+  test("runs multiple effects returned from the update function", async () => {
+    const effectFn1 = jest.fn();
+    const effectFn2 = jest.fn();
+    const App = createApp({
+      ...impl,
+      update(model) {
+        return [model, [effectFn1, effectFn2]];
+      },
+    });
+    render(<App />);
+
+    fireEvent.click(screen.getByText("+"));
+    expect(effectFn1).toHaveBeenCalledTimes(1);
+    expect(effectFn2).toHaveBeenCalledTimes(1);
+  });
 });
 
-test("updates the state correctly, when multiple interactions happen", async () => {
-  const App = createApp(impl);
-  render(<App />);
+describe("subscriptions", () => {
+  function documentClickSubscription(model, msg) {
+    const listener = () => msg("documentClick");
+    document.addEventListener("click", listener);
+    return () => {
+      // return unsubscribe function
+      document.removeEventListener("click", listener);
+    };
+  }
 
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("Reset"));
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("-"));
-  expect(screen.getByRole("heading")).toHaveTextContent("2");
+  test("binds and unbinds subscriptions correctly", async () => {
+    const App = createApp({
+      ...impl,
+      subscriptions(model) {
+        return model < 5 ? [documentClickSubscription] : [];
+      },
+    });
+    render(<App />);
+
+    fireEvent.click(screen.getByText("+"));
+    fireEvent.click(screen.getByText("+"));
+    expect(screen.getByRole("heading")).toHaveTextContent("7");
+  });
 });
