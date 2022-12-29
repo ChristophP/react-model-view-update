@@ -74,7 +74,6 @@ const createApp = ({ init, update, view, subscriptions }) => {
 
   function App() {
     const [state, sendMsg] = useUpdate(update, init);
-
     useSubscriptions(manageSubscriptions, state, sendMsg);
 
     const jsx = view(state, sendMsg);
