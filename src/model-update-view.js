@@ -12,14 +12,11 @@ function useUpdate(reducer, initState) {
   const [state, setState] = useState(initState);
 
   const sendMsg = useCallback(
-    (name, payload) => {
+    (msg) => {
       // we need to use the callback version of setState, because otherwise two calls in the
       // same tick might lead to unexpected updates (i.e. incrementing problem pointing to old state)
       setState((prevState) => {
-        const [nextState, effects] = reducer(prevState, {
-          type: name,
-          payload,
-        });
+        const [nextState, effects] = reducer(prevState, msg);
         effects.forEach((fx) => {
           if (typeof fx === "function") {
             fx(sendMsg);
@@ -28,22 +25,36 @@ function useUpdate(reducer, initState) {
         return nextState;
       });
     },
-    [reducer, setState]
+    [reducer]
   );
 
   return [state, sendMsg];
 }
 
+function useSubscriptions(manageSubscriptions, state, sendMsg) {
+  useEffect(() => {
+    manageSubscriptions(state, sendMsg);
+  }, [manageSubscriptions, state, sendMsg]);
+
+  // unbind subscriptions on unmount
+  useEffect(
+    () => () => {
+      manageSubscriptions(null, sendMsg);
+    },
+    []
+  );
+}
+
 // subscriptions management
-function createSubscriptionsManager() {
+function createSubscriptionsManager(mapStateToSubs) {
   const lastSubs = new Map();
 
-  return (mapStateToSubs, state, sendMsg) => {
-    const subs = mapStateToSubs(state);
+  return (state, sendMsg) => {
+    const subs = state !== null ? mapStateToSubs(state) : [];
     // if new value is there, subscribe and store unsubscribe function
     subs.forEach((func) => {
       if (!lastSubs.has(func) && typeof func === "function") {
-        lastSubs.set(func, func(state, sendMsg));
+        lastSubs.set(func, func(sendMsg));
       }
     });
 
@@ -59,26 +70,12 @@ function createSubscriptionsManager() {
 
 // app factory
 const createApp = ({ init, update, view, subscriptions }) => {
-  const manageSubscriptions = createSubscriptionsManager();
+  const manageSubscriptions = createSubscriptionsManager(subscriptions);
 
   function App() {
     const [state, sendMsg] = useUpdate(update, init);
 
-    useEffect(() => {
-      manageSubscriptions(subscriptions, state, sendMsg);
-    }, [state, sendMsg]);
-
-    // unbind subscriptions on unmount
-    useEffect(
-      () => () => {
-        manageSubscriptions(
-          () => [],
-          init,
-          () => {}
-        );
-      },
-      []
-    );
+    useSubscriptions(manageSubscriptions, state, sendMsg);
 
     const jsx = view(state, sendMsg);
     return <MsgContext.Provider value={sendMsg}>{jsx}</MsgContext.Provider>;

@@ -6,7 +6,7 @@ import { createApp, useSendMsg } from "./model-update-view";
 function ResetButton() {
   const sendMsg = useSendMsg();
   return (
-    <button type="button" onClick={() => sendMsg("reset")}>
+    <button type="button" onClick={() => sendMsg({ type: "reset" })}>
       Reset
     </button>
   );
@@ -32,10 +32,10 @@ const impl = {
     return (
       <div>
         <h2>{model}</h2>
-        <button type="button" onClick={() => sendMsg("plus")}>
+        <button type="button" onClick={() => sendMsg({ type: "plus" })}>
           +
         </button>
-        <button type="button" onClick={() => sendMsg("minus")}>
+        <button type="button" onClick={() => sendMsg({ type: "minus" })}>
           -
         </button>
         <ResetButton />
@@ -111,8 +111,8 @@ describe("effects", () => {
 });
 
 describe("subscriptions", () => {
-  function documentClickSubscription(model, sendMsg) {
-    const listener = () => sendMsg("documentClick");
+  function documentClickSubscription(sendMsg) {
+    const listener = () => sendMsg({ type: "documentClick" });
     document.addEventListener("click", listener);
     return () => {
       // return unsubscribe function
