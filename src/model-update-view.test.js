@@ -133,4 +133,24 @@ describe("subscriptions", () => {
     fireEvent.click(screen.getByText("+"));
     expect(screen.getByRole("heading")).toHaveTextContent("7");
   });
+
+  test("unbinds all subscriptions when component unmounts", () => {
+    const update = jest.fn((model) => [model, []]);
+    const App = createApp({
+      ...impl,
+      update,
+      subscriptions() {
+        return [documentClickSubscription];
+      },
+    });
+    const { unmount } = render(<App />);
+    expect(update).toHaveBeenCalledTimes(0);
+
+    fireEvent.click(document.body);
+    expect(update).toHaveBeenCalledTimes(1);
+
+    unmount();
+    fireEvent.click(document.body);
+    expect(update).toHaveBeenCalledTimes(1);
+  });
 });

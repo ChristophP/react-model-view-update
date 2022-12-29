@@ -68,6 +68,18 @@ const createApp = ({ init, update, view, subscriptions }) => {
       manageSubscriptions(subscriptions, state, msg);
     }, [state, msg]);
 
+    // unbind subscriptions on unmount
+    useEffect(
+      () => () => {
+        manageSubscriptions(
+          () => [],
+          init,
+          () => {}
+        );
+      },
+      []
+    );
+
     const jsx = view(state, msg);
     return <MsgContext.Provider value={msg}>{jsx}</MsgContext.Provider>;
   }
