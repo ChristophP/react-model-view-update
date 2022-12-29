@@ -26,10 +26,11 @@ See the `examples/` folder.
 ```js
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createApp, useMsg } from "../../src/model-update-view";
+// eslint-disable import/no-unresolved
+import { createApp, useSendMsg } from "../../src/model-update-view";
 
-function documentClickSubscription(model, msg) {
-  const listener = () => msg("documentClick");
+function documentClickSubscription(model, sendMsg) {
+  const listener = () => sendMsg("documentClick");
   document.addEventListener("click", listener);
   return () => {
     // return unsubscribe function
@@ -38,13 +39,13 @@ function documentClickSubscription(model, msg) {
 }
 
 function logEffect(text) {
-  return (msg) => console.log(text);
+  return (sendMsg) => console.log(text);
 }
 
 const App = createApp({
   init: 0,
-  update(model, action) {
-    switch (action.type) {
+  update(model, msg) {
+    switch (msg.type) {
       case "plus":
         return [model + 1, [logEffect("plus")]];
       case "minus":
@@ -54,28 +55,36 @@ const App = createApp({
       case "documentClick":
         return [model + 5, []];
       default:
-        throw new Error(`Unknown action "${action.type}"`);
+        throw new Error(`Unknown msg "${msg.type}"`);
     }
   },
-  view(model, msg) {
+  view(model, sendMsg) {
     return (
       <div>
         <h2> {model}</h2>
-        <button onClick={() => msg("plus")}> +</button>
-        <button onClick={() => msg("minus")}> -</button>
+        <button type="button" onClick={() => sendMsg("plus")}>
+          +
+        </button>
+        <button type="button" onClick={() => sendMsg("minus")}>
+          -
+        </button>
         <ResetButton />
       </div>
     );
   },
   subscriptions(model) {
     // listen to document clicks, unsubscribe if model is >= 30
-    return false && model < 30 ? [documentClickSubscription] : [];
+    return model < 30 ? [documentClickSubscription] : [];
   },
 });
 
 function ResetButton() {
-  const msg = useMsg();
-  return <button onClick={() => msg("reset")}> Reset </button>;
+  const sendMsg = useSendMsg();
+  return (
+    <button type="button" onClick={() => sendMsg("reset")}>
+      Reset
+    </button>
+  );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -85,5 +94,5 @@ root.render(<App />);
 ## API
 
 - `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
-- `useMsg()`: A hook to get the `msg()` function, to trigger `update()`. Think of `msg()` like `dispatch()` but with an easier signature: `msg("msgName", optionalPayload)` is equivalent to `dispatch({ type: "msgName", payload: optionalPayload })`
+- `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. Think of `sendMsg()` like `dispatch()`.
 

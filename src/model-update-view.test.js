@@ -1,12 +1,12 @@
 import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { createApp, useMsg } from "./model-update-view";
+import { createApp, useSendMsg } from "./model-update-view";
 
 function ResetButton() {
-  const msg = useMsg();
+  const sendMsg = useSendMsg();
   return (
-    <button type="button" onClick={() => msg("reset")}>
+    <button type="button" onClick={() => sendMsg("reset")}>
       Reset
     </button>
   );
@@ -14,8 +14,8 @@ function ResetButton() {
 
 const impl = {
   init: 0,
-  update(model, action) {
-    switch (action.type) {
+  update(model, msg) {
+    switch (msg.type) {
       case "plus":
         return [model + 1, []];
       case "minus":
@@ -25,17 +25,17 @@ const impl = {
       case "documentClick":
         return [model + 5, []];
       default:
-        throw new Error(`Unknown action "${action.type}"`);
+        throw new Error(`Unknown msg "${msg.type}"`);
     }
   },
-  view(model, msg) {
+  view(model, sendMsg) {
     return (
       <div>
         <h2>{model}</h2>
-        <button type="button" onClick={() => msg("plus")}>
+        <button type="button" onClick={() => sendMsg("plus")}>
           +
         </button>
-        <button type="button" onClick={() => msg("minus")}>
+        <button type="button" onClick={() => sendMsg("minus")}>
           -
         </button>
         <ResetButton />
@@ -111,8 +111,8 @@ describe("effects", () => {
 });
 
 describe("subscriptions", () => {
-  function documentClickSubscription(model, msg) {
-    const listener = () => msg("documentClick");
+  function documentClickSubscription(model, sendMsg) {
+    const listener = () => sendMsg("documentClick");
     document.addEventListener("click", listener);
     return () => {
       // return unsubscribe function

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 // msg triggering
 const MsgContext = React.createContext(null);
 
-function useMsg() {
+function useSendMsg() {
   return useContext(MsgContext);
 }
 
@@ -11,7 +11,7 @@ function useMsg() {
 function useUpdate(reducer, initState) {
   const [state, setState] = useState(initState);
 
-  const msg = useCallback(
+  const sendMsg = useCallback(
     (name, payload) => {
       // we need to use the callback version of setState, because otherwise two calls in the
       // same tick might lead to unexpected updates (i.e. incrementing problem pointing to old state)
@@ -22,7 +22,7 @@ function useUpdate(reducer, initState) {
         });
         effects.forEach((fx) => {
           if (typeof fx === "function") {
-            fx(msg);
+            fx(sendMsg);
           }
         });
         return nextState;
@@ -31,19 +31,19 @@ function useUpdate(reducer, initState) {
     [reducer, setState]
   );
 
-  return [state, msg];
+  return [state, sendMsg];
 }
 
 // subscriptions management
 function createSubscriptionsManager() {
   const lastSubs = new Map();
 
-  return (mapStateToSubs, state, msg) => {
+  return (mapStateToSubs, state, sendMsg) => {
     const subs = mapStateToSubs(state);
     // if new value is there, subscribe and store unsubscribe function
     subs.forEach((func) => {
       if (!lastSubs.has(func) && typeof func === "function") {
-        lastSubs.set(func, func(state, msg));
+        lastSubs.set(func, func(state, sendMsg));
       }
     });
 
@@ -62,11 +62,11 @@ const createApp = ({ init, update, view, subscriptions }) => {
   const manageSubscriptions = createSubscriptionsManager();
 
   function App() {
-    const [state, msg] = useUpdate(update, init);
+    const [state, sendMsg] = useUpdate(update, init);
 
     useEffect(() => {
-      manageSubscriptions(subscriptions, state, msg);
-    }, [state, msg]);
+      manageSubscriptions(subscriptions, state, sendMsg);
+    }, [state, sendMsg]);
 
     // unbind subscriptions on unmount
     useEffect(
@@ -80,11 +80,11 @@ const createApp = ({ init, update, view, subscriptions }) => {
       []
     );
 
-    const jsx = view(state, msg);
-    return <MsgContext.Provider value={msg}>{jsx}</MsgContext.Provider>;
+    const jsx = view(state, sendMsg);
+    return <MsgContext.Provider value={sendMsg}>{jsx}</MsgContext.Provider>;
   }
 
   return App;
 };
 
-export { createApp, useMsg };
+export { createApp, useSendMsg };
