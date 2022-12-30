@@ -4,10 +4,10 @@ A React microframework for pure state management and managed side effects. Inspi
 
 **This is currently a work in progress! But coming along nicely.**
 
-- all-in-one: State management and effect handling out of the box.
-- no redux libraries needed: No redux libraries needed.
-- zero dependencies: Has no dependencies other than React itself.
-- lighweight: The implementation is in a single file and has less than 100 lines of code.
+- **all-in-one:** State management and effect handling out of the box.
+- **no redux libraries needed:** No redux libraries needed.
+- **zero dependencies:** Has no dependencies other than React itself.
+- **lighweight:** The implementation is in a single file and has less than 100 lines of code.
 
 ## Why?
 
