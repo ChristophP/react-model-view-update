@@ -154,3 +154,21 @@ describe("subscriptions", () => {
     expect(update).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("useSendMsg", () => {
+  function SubComponent({ originalSendMsg }) {
+    const sendMsg = useSendMsg();
+    return originalSendMsg === sendMsg ? <h2>Same</h2> : null;
+  }
+  test("useSendMsg gives same sendMsg() function as passed to view()", async () => {
+    const App = createApp({
+      ...impl,
+      view(model, sendMsg) {
+        return <SubComponent originalSendMsg={sendMsg} />;
+      },
+    });
+    render(<App />);
+
+    expect(screen.getByRole("heading")).toHaveTextContent("Same");
+  });
+});

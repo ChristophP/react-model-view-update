@@ -95,5 +95,5 @@ root.render(<App />);
 ## API
 
 - `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
-- `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. Think of `sendMsg()` like `dispatch()`.
+- `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. It's mainly for convenience, so you don't have to pass down `sendMsg()` in deep component hierarchies. Think of `sendMsg()` like `dispatch()`.
 

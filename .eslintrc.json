@@ -14,7 +14,8 @@
     "react/jsx-filename-extension": "off",
     "import/no-relative-packages": "off",
     "react-hooks/rules-of-hooks": "error", 
-    "react-hooks/exhaustive-deps": "warn" 
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/prop-types": "off" 
   },
   "parserOptions": {
     "sourceType": "module",
