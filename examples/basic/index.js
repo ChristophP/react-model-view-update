@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 // eslint-disable import/no-unresolved
 import { createApp, useSendMsg } from "../../src/model-update-view";
 
-function documentClickSubscription(model, sendMsg) {
-  const listener = () => sendMsg("documentClick");
+function documentClickSubscription(sendMsg) {
+  const listener = () => sendMsg({ type: "documentClick" });
   document.addEventListener("click", listener);
   return () => {
     // return unsubscribe function
@@ -19,6 +19,7 @@ function logEffect(text) {
 const App = createApp({
   init: 0,
   update(model, msg) {
+    console.log({ msg });
     switch (msg.type) {
       case "plus":
         return [model + 1, [logEffect("plus")]];
@@ -36,10 +37,10 @@ const App = createApp({
     return (
       <div>
         <h2> {model}</h2>
-        <button type="button" onClick={() => sendMsg("plus")}>
+        <button type="button" onClick={() => sendMsg({ type: "plus" })}>
           +
         </button>
-        <button type="button" onClick={() => sendMsg("minus")}>
+        <button type="button" onClick={() => sendMsg({ type: "minus" })}>
           -
         </button>
         <ResetButton />
@@ -55,7 +56,7 @@ const App = createApp({
 function ResetButton() {
   const sendMsg = useSendMsg();
   return (
-    <button type="button" onClick={() => sendMsg("reset")}>
+    <button type="button" onClick={() => sendMsg({ type: "reset" })}>
       Reset
     </button>
   );
