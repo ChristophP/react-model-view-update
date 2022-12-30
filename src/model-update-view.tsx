@@ -67,9 +67,16 @@ function createSubscriptionsManager(mapStateToSubs) {
     });
   };
 }
+type SendMsgFn = () => void;
+type Effect = (sendMsg: SendMsgFn) => void;
+
+type Implementation<Model, Msg> = {
+  init: () => Model;
+  update: (model: Model, msg: Msg) => [Model, Effect[]];
+};
 
 // app factory
-const createApp = ({ init, update, view, subscriptions }) => {
+function createApp({ init, update, view, subscriptions }) {
   const manageSubscriptions = createSubscriptionsManager(subscriptions);
   const initialState = init();
 
@@ -82,6 +89,6 @@ const createApp = ({ init, update, view, subscriptions }) => {
   }
 
   return App;
-};
+}
 
 export { createApp, useSendMsg };
