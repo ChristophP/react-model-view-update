@@ -126,6 +126,17 @@ describe("subscriptions", () => {
     };
   }
 
+  const eventTarget = new EventTarget();
+  function manualTriggerSubscription(sendMsg) {
+    const listener = (event) => {
+      sendMsg(event.detail);
+    };
+    eventTarget.addEventListener("trigger", listener);
+    return () => {
+      eventTarget.removeEventListener("trigger", listener);
+    };
+  }
+
   test("binds and unbinds subscriptions correctly", () => {
     const App = createApp({
       ...impl,
@@ -158,6 +169,30 @@ describe("subscriptions", () => {
     unmount();
     fireEvent.click(document.body);
     expect(update).toHaveBeenCalledTimes(1);
+  });
+
+  test("allows creating a manual trigger for subscriptions", () => {
+    const update = jest.fn((model) => [model, []]);
+    const App = createApp({
+      ...impl,
+      update,
+      subscriptions() {
+        return [manualTriggerSubscription];
+      },
+    });
+    render(<App />);
+    expect(update).toHaveBeenCalledTimes(0);
+
+    eventTarget.dispatchEvent(
+      new CustomEvent("trigger", { detail: { type: "trigger" } })
+    );
+    eventTarget.dispatchEvent(
+      new CustomEvent("trigger", { detail: { type: "trigger" } })
+    );
+    eventTarget.dispatchEvent(
+      new CustomEvent("trigger", { detail: { type: "trigger" } })
+    );
+    expect(update).toHaveBeenCalledTimes(3);
   });
 });
 
