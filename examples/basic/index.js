@@ -18,7 +18,9 @@ function logEffect(text) {
 }
 
 const App = createApp({
-  init: 0,
+  init() {
+    return 0;
+  },
   update(model, msg) {
     switch (msg.type) {
       case "plus":

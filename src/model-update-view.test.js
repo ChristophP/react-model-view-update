@@ -13,7 +13,9 @@ function ResetButton() {
 }
 
 const impl = {
-  init: 0,
+  init() {
+    return 0;
+  },
   update(model, msg) {
     switch (msg.type) {
       case "plus":
@@ -47,14 +49,18 @@ const impl = {
   },
 };
 
-describe("basic update", () => {
+describe("init", () => {
   test("starts up and displays initial model", async () => {
     const App = createApp(impl);
     render(<App />);
 
-    expect(screen.getByRole("heading")).toHaveTextContent(impl.init.toString());
+    expect(screen.getByRole("heading")).toHaveTextContent(
+      impl.init().toString()
+    );
   });
+});
 
+describe("update", () => {
   test("updates the state correctly, when interactions happen", async () => {
     const App = createApp(impl);
     render(<App />);

@@ -14,10 +14,10 @@ Wouldn't it be nice to have a simple setup that works for (almost) all cases wit
 
 This pattern (also known as the Elm architecture) breaks down an app into 4 main functions.
 
-- **init**: An initial value for your state
-- **update**: A function that gets messages, the current state and computes and returns a new state (reducer). Runs whenever events happen.
+- **init**: An function which returns the initial value for your model
+- **update**: A function that gets messages, the current model and computes and returns a new model (reducer). Runs whenever events happen.
 - **view**: A function that gets the model and a message dispatching function and returns some JSX.
-- **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the state changes.
+- **subscriptions**: A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the model changes.
 
 ## Example usage
 
@@ -43,7 +43,9 @@ function logEffect(text) {
 }
 
 const App = createApp({
-  init: 0,
+  init() {
+    return 0;
+  },
   update(model, msg) {
     console.log({ msg });
     switch (msg.type) {
@@ -91,6 +93,18 @@ function ResetButton() {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
 ```
+## FAQs
+
+### What is `model`, `sendMsg` and `msg`?
+
+If you're familiar with redux or React's `useReducer` hook, those are different names for things you already know.
+- `model` -> `state`
+- `msg` -> `action`
+- `sendMsg()` -> `dispatch()`
+
+They are conceptually the same thing. Feel free to use the names you are comfortable with in your app.
+
+**Extra hint 💡**: `update()` would be similar to your `reducer()`. 😉
 
 ## API
 

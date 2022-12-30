@@ -71,9 +71,10 @@ function createSubscriptionsManager(mapStateToSubs) {
 // app factory
 const createApp = ({ init, update, view, subscriptions }) => {
   const manageSubscriptions = createSubscriptionsManager(subscriptions);
+  const initialState = init();
 
   function App() {
-    const [state, sendMsg] = useUpdate(update, init);
+    const [state, sendMsg] = useUpdate(update, initialState);
     useSubscriptions(manageSubscriptions, state, sendMsg);
 
     const jsx = view(state, sendMsg);
