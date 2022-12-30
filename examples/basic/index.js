@@ -13,13 +13,13 @@ function documentClickSubscription(sendMsg) {
 }
 
 function logEffect(text) {
+  // eslint-disable-next-line no-console, no-unused-vars
   return (sendMsg) => console.log(text);
 }
 
 const App = createApp({
   init: 0,
   update(model, msg) {
-    console.log({ msg });
     switch (msg.type) {
       case "plus":
         return [model + 1, [logEffect("plus")]];

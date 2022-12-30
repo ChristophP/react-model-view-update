@@ -41,7 +41,7 @@ function useSubscriptions(manageSubscriptions, state, sendMsg) {
     () => () => {
       manageSubscriptions(null, sendMsg);
     },
-    []
+    [manageSubscriptions, sendMsg]
   );
 }
 

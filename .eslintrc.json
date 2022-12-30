@@ -12,10 +12,10 @@
   "rules": {
     "prettier/prettier": "error",
     "react/jsx-filename-extension": "off",
+    "react/prop-types": "off",
     "import/no-relative-packages": "off",
     "react-hooks/rules-of-hooks": "error", 
-    "react-hooks/exhaustive-deps": "warn",
-    "react-hooks/prop-types": "off" 
+    "react-hooks/exhaustive-deps": "warn"
   },
   "parserOptions": {
     "sourceType": "module",
