@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A React microframework for pure state management and managed side effects. Inspired by the Elm architecture, no redux needed.",
   "source": "src/model-update-view.tsx",
-  "main": "src/main.js",
+  "main": "dist/main.js",
   "module": "dist/module.js",
   "types": "dist/types.d.ts",
   "files": [
