@@ -22,7 +22,7 @@ This pattern (also known as the Elm architecture) breaks down an app into 4 main
 function | description
 ---      |  ----    
 **init** | A function which returns the initial value for your model
-**update** | A function that gets messages, the current model and computes and returns a new model (reducer). Runs whenever events happen.
+**update** | A function that gets messages, the current model and computes and returns a new model and a list of effects (reducer). Runs whenever events happen.
 **view** |A function that gets the model and a message dispatching function and returns some JSX.
 **subscriptions** | A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the model changes.
 
@@ -53,7 +53,7 @@ const App = createApp({
   init() {
     return 0;
   },
-  update(model, msg) {
+  update(msg, model) {
     console.log({ msg });
     switch (msg.type) {
       case "plus":

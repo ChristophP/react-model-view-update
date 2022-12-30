@@ -21,7 +21,7 @@ const App = createApp({
   init() {
     return 0;
   },
-  update(model, msg) {
+  update(msg, model) {
     switch (msg.type) {
       case "plus":
         return [model + 1, [logEffect("plus")]];

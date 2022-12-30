@@ -16,7 +16,7 @@ const impl = {
   init() {
     return 0;
   },
-  update(model, msg) {
+  update(msg, model) {
     switch (msg.type) {
       case "plus":
         return [model + 1, []];
@@ -88,7 +88,7 @@ describe("effects", () => {
     const effectFn = jest.fn();
     const App = createApp({
       ...impl,
-      update(model) {
+      update(msg, model) {
         return [model, [effectFn]];
       },
     });
@@ -104,7 +104,7 @@ describe("effects", () => {
     const effectFn2 = jest.fn();
     const App = createApp({
       ...impl,
-      update(model) {
+      update(msg, model) {
         return [model, [effectFn1, effectFn2]];
       },
     });
@@ -117,7 +117,7 @@ describe("effects", () => {
 
   test("non-functions effects will be skipped", () => {
     const effectFn = jest.fn();
-    const update = jest.fn((model) => [model + 1, [effectFn, null]]);
+    const update = jest.fn((msg, model) => [model + 1, [effectFn, null]]);
     const App = createApp({
       ...impl,
       update,
@@ -185,7 +185,7 @@ describe("subscriptions", () => {
   });
 
   test("allows creating a manual trigger for subscriptions", () => {
-    const update = jest.fn((model) => [model, []]);
+    const update = jest.fn((msg, model) => [model, []]);
     const App = createApp({
       ...impl,
       update,
@@ -208,7 +208,7 @@ describe("subscriptions", () => {
   });
 
   test("non-function subscriptions will be treated as non-existing and unmounted", () => {
-    const update = jest.fn((model) => [model + 1, []]);
+    const update = jest.fn((msg, model) => [model + 1, []]);
     const App = createApp({
       ...impl,
       update,

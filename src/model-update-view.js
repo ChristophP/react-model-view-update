@@ -16,7 +16,7 @@ function useUpdate(reducer, initState) {
       // we need to use the callback version of setState, because otherwise two calls in the
       // same tick might lead to unexpected updates (i.e. incrementing problem pointing to old state)
       setState((prevState) => {
-        const [nextState, effects] = reducer(prevState, msg);
+        const [nextState, effects] = reducer(msg, prevState);
         effects.forEach((fx) => {
           if (typeof fx === "function") {
             fx(sendMsg);
