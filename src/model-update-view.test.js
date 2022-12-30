@@ -50,7 +50,7 @@ const impl = {
 };
 
 describe("init", () => {
-  test("starts up and displays initial model", async () => {
+  test("starts up and displays initial model", () => {
     const App = createApp(impl);
     render(<App />);
 
@@ -61,7 +61,7 @@ describe("init", () => {
 });
 
 describe("update", () => {
-  test("updates the state correctly, when interactions happen", async () => {
+  test("updates the state correctly, when interactions happen", () => {
     const App = createApp(impl);
     render(<App />);
 
@@ -69,7 +69,7 @@ describe("update", () => {
     expect(screen.getByRole("heading")).toHaveTextContent("1");
   });
 
-  test("updates the state correctly, when multiple interactions happen", async () => {
+  test("updates the state correctly, when multiple interactions happen", () => {
     const App = createApp(impl);
     render(<App />);
 
@@ -84,7 +84,7 @@ describe("update", () => {
 });
 
 describe("effects", () => {
-  test("runs an effect returned from the update function", async () => {
+  test("runs an effect returned from the update function", () => {
     const effectFn = jest.fn();
     const App = createApp({
       ...impl,
@@ -99,7 +99,7 @@ describe("effects", () => {
     expect(effectFn).toHaveBeenCalledTimes(2);
   });
 
-  test("runs multiple effects returned from the update function", async () => {
+  test("runs multiple effects returned from the update function", () => {
     const effectFn1 = jest.fn();
     const effectFn2 = jest.fn();
     const App = createApp({
@@ -126,7 +126,7 @@ describe("subscriptions", () => {
     };
   }
 
-  test("binds and unbinds subscriptions correctly", async () => {
+  test("binds and unbinds subscriptions correctly", () => {
     const App = createApp({
       ...impl,
       subscriptions(model) {
@@ -166,7 +166,7 @@ describe("useSendMsg", () => {
     const sendMsg = useSendMsg();
     return originalSendMsg === sendMsg ? <h2>Same</h2> : null;
   }
-  test("useSendMsg gives same sendMsg() function as passed to view()", async () => {
+  test("useSendMsg gives same sendMsg() function as passed to view()", () => {
     const App = createApp({
       ...impl,
       view(model, sendMsg) {
