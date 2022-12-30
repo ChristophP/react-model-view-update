@@ -30,7 +30,7 @@ import ReactDOM from "react-dom/client";
 import { createApp, useSendMsg } from "../../src/model-update-view";
 
 function documentClickSubscription(sendMsg) {
-  const listener = () => sendMsg({ type: "documentClick"});
+  const listener = () => sendMsg({ type: "documentClick" });
   document.addEventListener("click", listener);
   return () => {
     // return unsubscribe function
@@ -45,6 +45,7 @@ function logEffect(text) {
 const App = createApp({
   init: 0,
   update(model, msg) {
+    console.log({ msg });
     switch (msg.type) {
       case "plus":
         return [model + 1, [logEffect("plus")]];
