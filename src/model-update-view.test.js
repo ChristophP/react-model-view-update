@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { createApp, useSendMsg } from "./model-update-view";
 
@@ -114,6 +114,19 @@ describe("effects", () => {
     expect(effectFn1).toHaveBeenCalledTimes(1);
     expect(effectFn2).toHaveBeenCalledTimes(1);
   });
+
+  test("non-functions effects will be skipped", () => {
+    const effectFn = jest.fn();
+    const update = jest.fn((model) => [model + 1, [effectFn, null]]);
+    const App = createApp({
+      ...impl,
+      update,
+    });
+    render(<App />);
+
+    fireEvent.click(screen.getByText("+"));
+    expect(effectFn).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("subscriptions", () => {
@@ -152,7 +165,7 @@ describe("subscriptions", () => {
   });
 
   test("unbinds all subscriptions when component unmounts", () => {
-    const update = jest.fn((model) => [model, []]);
+    const update = jest.fn((model) => [model + 1, []]);
     const App = createApp({
       ...impl,
       update,
@@ -181,18 +194,38 @@ describe("subscriptions", () => {
       },
     });
     render(<App />);
-    expect(update).toHaveBeenCalledTimes(0);
 
-    eventTarget.dispatchEvent(
-      new CustomEvent("trigger", { detail: { type: "trigger" } })
-    );
-    eventTarget.dispatchEvent(
-      new CustomEvent("trigger", { detail: { type: "trigger" } })
-    );
-    eventTarget.dispatchEvent(
-      new CustomEvent("trigger", { detail: { type: "trigger" } })
-    );
+    const customTrigger = () =>
+      eventTarget.dispatchEvent(
+        new CustomEvent("trigger", { detail: { type: "trigger" } })
+      );
+
+    act(customTrigger);
+    act(customTrigger);
+    act(customTrigger);
+
     expect(update).toHaveBeenCalledTimes(3);
+  });
+
+  test("non-function subscriptions will be treated as non-existing and unmounted", () => {
+    const update = jest.fn((model) => [model + 1, []]);
+    const App = createApp({
+      ...impl,
+      update,
+      subscriptions(model) {
+        return [model === 0 ? manualTriggerSubscription : null];
+      },
+    });
+    render(<App />);
+
+    const customTrigger = () =>
+      eventTarget.dispatchEvent(
+        new CustomEvent("trigger", { detail: { type: "trigger" } })
+      );
+    act(customTrigger);
+    expect(update).toHaveBeenCalledTimes(1);
+    act(customTrigger);
+    expect(update).toHaveBeenCalledTimes(1);
   });
 });
 
