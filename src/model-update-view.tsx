@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 
 // msg triggering
-const MsgContext = React.createContext(null);
+const MsgContext = React.createContext<SendMsgFn<any> | null>(null);
 
 function useSendMsg<Msg>(): SendMsgFn<Msg> | null {
   return useContext(MsgContext);
@@ -11,7 +11,7 @@ function useSendMsg<Msg>(): SendMsgFn<Msg> | null {
 function useUpdate<Model, Msg>(
   reducer: (msg: Msg, model: Model) => [Model, Effect<Msg>[]],
   initState: Model
-) {
+): [Model, SendMsgFn<Msg>] {
   const [state, setState] = useState(initState);
 
   const sendMsg = useCallback(

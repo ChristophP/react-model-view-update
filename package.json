@@ -13,6 +13,7 @@
     "test": "jest",
     "build": "parcel build src/model-update-view.tsx",
     "lint": "eslint src examples",
+    "typecheck": "tsc --noEmit",
     "example": "parcel serve examples/basic/index.html"
   },
   "keywords": [

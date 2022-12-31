@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
-    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -30,5 +29,12 @@
     "noUnusedParameters": true,
     "importsNotUsedAsValues": "error",
     "checkJs": true
-  }
+  },
+
+  "files": [
+    "src/model-update-view.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
