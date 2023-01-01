@@ -64,7 +64,7 @@ function logEffect(text) {
 
 const App = createApp({
   init() {
-    return 0;
+    return [0, []];
   },
   update(msg, model) {
     console.log({ msg });
