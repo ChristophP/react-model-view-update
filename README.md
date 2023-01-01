@@ -2,12 +2,13 @@
 
 A React microframework for pure state management and managed side effects. Inspired by the [Elm architecture](https://guide.elm-lang.org/architecture/), no Redux needed. No dependencies other than React itself.
 
-**This is currently a work in progress! But coming along nicely.**
+**This is currently in the beta phase! After gathering some feedback it will be bumped to stable soon.**
 
-- **all-in-one:** State management and effect handling out of the box.
-- **no redux libraries needed:** No redux libraries needed.
-- **zero dependencies:** Has no dependencies other than React itself.
-- **lighweight:** The implementation is in a single file and has less than 100 lines of code.
+- ✅ **all-in-one:** State management and effect handling out of the box.
+- ✅ **no redux libraries needed:** No redux, react-redux, redux-thunk, redux-sage, redux-loop etc needed.
+- ✅ **zero dependencies:** Has no dependencies other than React itself.
+- ✅ **lightweight:** The implementation is in a single file of ~1KB minified and has less than ~100 lines of code. (Check on [bundlephobia](https://bundlephobia.com/package/react-model-update-view))
+- ✅ **typed:** This library ships with TypeScript Types.
 
 ## Why?
 
@@ -26,6 +27,12 @@ function | description
 **view** |A function that gets the model and a message dispatching function and returns some JSX.
 **subscriptions** | A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the model changes.
 
+## Installing
+
+```sh
+npm i -D react-model-update-view
+```
+
 ## Example usage
 
 See the `examples/` folder.
@@ -34,7 +41,7 @@ See the `examples/` folder.
 import React from "react";
 import ReactDOM from "react-dom/client";
 // eslint-disable import/no-unresolved
-import { createApp, useSendMsg } from "../../src/model-update-view";
+import { createApp, useSendMsg } from "react-model-update-view";
 
 function documentClickSubscription(sendMsg) {
   const listener = () => sendMsg({ type: "documentClick" });
