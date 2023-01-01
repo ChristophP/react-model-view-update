@@ -26,7 +26,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "importsNotUsedAsValues": "error",
-    "checkJs": true,
+    "checkJs": false,
     "allowJs": true
   },
 
