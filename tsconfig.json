@@ -26,11 +26,13 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "importsNotUsedAsValues": "error",
-    "checkJs": true
+    "checkJs": true,
+    "allowJs": true
   },
 
-  "files": [
-    "src/model-update-view.tsx"
+  "include": [
+    "src/**/*",
+    "examples/**/*",
   ],
   "exclude": [
     "node_modules"
