@@ -1,9 +1,26 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 
-// msg triggering
-const MsgContext = React.createContext<SendMsgFn<any> | null>(null);
+export type SendMsgFn<Msg> = (msg: Msg) => void;
+export type Effect<Msg> = (sendMsg: SendMsgFn<Msg>) => void;
+export type Sub<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
+type SubManager<Model, Msg> = (
+  model: Model | null,
+  sendMsg: SendMsgFn<Msg>
+) => void;
 
-function useSendMsg<Msg>(): SendMsgFn<Msg> | null {
+export type Implementation<Model, Msg> = {
+  init: () => Model;
+  update: (msg: Msg, model: Model) => [Model, Effect<Msg>[]];
+  view: (model: Model, sendMsg: SendMsgFn<Msg>) => JSX.Element;
+  subscriptions: (model: Model) => Sub<Msg>[];
+};
+
+// msg triggering
+const MsgContext = React.createContext<SendMsgFn<any>>(() => {
+  console.error("send message not initialized yet");
+});
+
+function useSendMsg<Msg>(): SendMsgFn<Msg> {
   return useContext(MsgContext);
 }
 
@@ -76,20 +93,6 @@ function createSubscriptionsManager<Model, Msg>(
     });
   };
 }
-type SendMsgFn<Msg> = (msg: Msg) => void;
-type Effect<Msg> = (sendMsg: SendMsgFn<Msg>) => void;
-type Sub<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
-type SubManager<Model, Msg> = (
-  model: Model | null,
-  sendMsg: SendMsgFn<Msg>
-) => void;
-
-type Implementation<Model, Msg> = {
-  init: () => Model;
-  update: (msg: Msg, model: Model) => [Model, Effect<Msg>[]];
-  view: (model: Model, sendMsg: SendMsgFn<Msg>) => JSX.Element;
-  subscriptions: (model: Model) => Sub<Msg>[];
-};
 
 // app factory
 function createApp<Model, Msg>({
