@@ -9,7 +9,7 @@ type SubManager<Model, Msg> = (
 ) => void;
 
 export type Implementation<Model, Msg> = {
-  init: () => Model;
+  init: () => [Model, Effect<Msg>[]];
   update: (msg: Msg, model: Model) => [Model, Effect<Msg>[]];
   view: (model: Model, sendMsg: SendMsgFn<Msg>) => JSX.Element;
   subscriptions: (model: Model) => Sub<Msg>[];
@@ -22,6 +22,18 @@ const MsgContext = React.createContext<SendMsgFn<any>>(() => {
 
 function useSendMsg<Msg>(): SendMsgFn<Msg> {
   return useContext(MsgContext);
+}
+
+// initialEffects
+function useInitialEffects<Msg>(
+  effects: Effect<Msg>[],
+  sendMsg: SendMsgFn<Msg>
+) {
+  useEffect(() => {
+    effects.forEach((fx) => {
+      fx(sendMsg);
+    });
+  }, [effects, sendMsg]);
 }
 
 // state/effect update function
@@ -38,9 +50,7 @@ function useUpdate<Model, Msg>(
       setState((prevState) => {
         const [nextState, effects] = reducer(msg, prevState);
         effects.forEach((fx) => {
-          if (typeof fx === "function") {
-            fx(sendMsg);
-          }
+          fx(sendMsg);
         });
         return nextState;
       });
@@ -102,10 +112,11 @@ function createApp<Model, Msg>({
   subscriptions,
 }: Implementation<Model, Msg>): () => JSX.Element {
   const manageSubscriptions = createSubscriptionsManager(subscriptions);
-  const initialState = init();
+  const [initialState, initialEffects] = init();
 
   function App() {
     const [state, sendMsg] = useUpdate(update, initialState);
+    useInitialEffects(initialEffects, sendMsg);
     useSubscriptions(manageSubscriptions, state, sendMsg);
 
     const jsx = view(state, sendMsg);

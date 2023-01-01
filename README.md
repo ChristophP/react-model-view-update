@@ -7,7 +7,7 @@ A React microframework for pure state management and managed side effects. Inspi
 - ✅ **all-in-one:** State management and effect handling out of the box.
 - ✅ **no redux libraries needed:** No redux, react-redux, redux-thunk, redux-sage, redux-loop etc needed.
 - ✅ **zero dependencies:** Has no dependencies other than React itself.
-- ✅ **lightweight:** The implementation is in a single file of ~1KB minified and has less than ~100 lines of code. (Check on [bundlephobia](https://bundlephobia.com/package/react-model-update-view))
+- ✅ **lightweight:** The implementation is in a single file of ~1KB minified and a bit over ~100 lines of code including comments. (Check on [bundlephobia](https://bundlephobia.com/package/react-model-update-view))
 - ✅ **typed:** This library ships with TypeScript Types.
 
 ## Why?
@@ -15,6 +15,12 @@ A React microframework for pure state management and managed side effects. Inspi
 React is univeral but leaves a lot of open questions regarding how to manage application state and side-effects.
 For this reason a multitude of libraries like `redux`, `redux-thunk`, `redux-saga` etc have emerged, which all come with a dependency footprint, boiler plate code, and up front planning on which libraries to select.
 Wouldn't it be nice to have a simple setup that works for (almost) all cases with a single dependency and minimal boiler plate?
+
+So this library is for you if
+- you like to have your application state and side-effects managed in a clean way
+- you're tired of wiring together multiple (redux-)libraries
+- wanna keep dependencies to a minimum
+- keep your app simple as it grows
 
 ## What is Model-Update-View?
 

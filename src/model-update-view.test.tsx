@@ -23,7 +23,7 @@ type Msg = { type: string }; // TODO improve Msg type
 
 const impl: Implementation<Model, Msg> = {
   init() {
-    return 0;
+    return [0, []];
   },
   update(msg, model) {
     switch (msg.type) {
@@ -59,13 +59,26 @@ const impl: Implementation<Model, Msg> = {
 };
 
 describe("init", () => {
-  test("starts up and displays initial model", () => {
+  test("starts up and displays the initial model", () => {
     const App = createApp<Model, Msg>(impl);
     render(<App />);
 
+    const [initialModel] = impl.init();
     expect(screen.getByRole("heading")).toHaveTextContent(
-      impl.init().toString()
+      initialModel.toString()
     );
+  });
+
+  test("executes side effects returned from init", () => {
+    const effectFn = jest.fn();
+    const init = jest.fn((): [Model, Effect<Msg>[]] => [0, [effectFn]]);
+    const App = createApp<Model, Msg>({
+      ...impl,
+      init,
+    });
+    render(<App />);
+
+    expect(effectFn).toHaveBeenCalledTimes(1);
   });
 });
 
