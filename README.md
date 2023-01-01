@@ -12,7 +12,7 @@ A React microframework for pure state management and managed side effects. Inspi
 
 ## Why?
 
-React is univerally used, but leaves a lot of open questions regarding how to manage application state and side-effects.
+React is universally used, but leaves a lot of open questions regarding how to manage application state and side-effects.
 For this reason a multitude of libraries like `redux`, `redux-thunk`, `redux-saga` etc have emerged, which all come with a dependency footprint, boiler plate code, and up front planning on which libraries to select.
 Wouldn't it be nice to have a simple setup that works for (almost) all cases with a single dependency and minimal boiler plate?
 
