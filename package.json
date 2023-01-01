@@ -1,6 +1,6 @@
 {
   "name": "react-model-update-view",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A React microframework for pure state management and managed side effects. Inspired by the Elm architecture, no redux needed.",
   "source": "src/model-update-view.tsx",
   "main": "dist/main.js",
@@ -12,6 +12,7 @@
   "scripts": {
     "test": "jest",
     "build": "parcel build src/model-update-view.tsx",
+    "prepublishOnly": "rm -rf dist/ && npm run build",
     "lint": "eslint src examples",
     "typecheck": "tsc --noEmit",
     "example": "parcel serve examples/basic/index.html"
