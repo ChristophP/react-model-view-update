@@ -126,7 +126,36 @@ They are conceptually the same thing. Feel free to use the names you are comfort
 
 **Extra hint 💡**: `update()` would be similar to your `reducer()`. 😉
 
+### Can I provide my own types for model and message?
+
+Yes, `createApp` has a generic type signature. So you can use it like this in Typescript.
+
+```js
+const App = createApp<Model, Msg>({ init, update, view, subscriptions });
+```
+
+### Can I still use local state?
+
+Yes, everything in the `view()` function is still plain react, so [hooks](https://reactjs.org/docs/hooks-intro.html) etc are available.
+We recommend to put all application state into the model and have it managed by `update()` as single source of truth.
+
+However, there may be component state, that is UI based and not as important to your app as a whole, such as whether something is focused, 
+or has been clicked before. Those are things where it's up to you to manage it as a local component state, but the general recommendation
+is to keep that to a minimum.
+
+### How can I avoid prop drilling?
+
+Having to pass down values through a deep component hierarchy can be annoying and bloat your code.
+You'll likely need to be able to trigger messages from many places in your app. To avoid having to pass around `sendMsg()` everywhere,
+the `useSendMsg` hook will give you easy access to the message triggering function from anywhere (not needed in directly in `view()` though because
+`view()` receives `sendMsg()` as the second argument)
+
+There is no such hook for accessing the model, because usually with good model design, data is passed down to components quite naturally.
+If you find yourself struggling with that, please open an issue.
+
 ## API
+
+For the complete docs check the API docs.
 
 - `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
 - `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. It's mainly for convenience, so you don't have to pass down `sendMsg()` in deep component hierarchies. Think of `sendMsg()` like `dispatch()`.
