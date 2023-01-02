@@ -1,8 +1,9 @@
 # Effects
 
 Effects help your app to interact the outside world through Browser APIs.
-If you're familiar with redux, they are conceptually somewhat similar to a [`thunk`](https://redux.js.org/usage/writing-logic-thunks#what-is-a-thunk.
-Here are some examples of commonly needed effects
+If you're familiar with redux, they are conceptually somewhat similar to a [`thunk`](https://redux.js.org/usage/writing-logic-thunks#what-is-a-thunk).
+Returns the effects from the `init()` and `update()` functions passed to `createApp()`.
+Here are some examples of commonly needed effects:
 
 ## HTTP requests
 
@@ -37,18 +38,6 @@ function generateRandomNumber(maxNumber): Effect<Msg> => {
 function setDocumentTitle(title): Effect<Msg> => {
   return () = {
     document.title = title;
-  }
-};
-```
-
-## Wait for a period of time
-
-```js
-function wait(milliSeconds): Effect<Msg> => {
-  return (sendMsg) = {
-    setTimeout(() => { 
-      sendMsg({ type: "waitingDone" })
-    }, milliSeconds);
   }
 };
 ```

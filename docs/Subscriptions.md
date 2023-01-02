@@ -1,8 +1,8 @@
 # Subscriptions
 
-Effects help your app to interact the outside world through Browser APIs.
-If you're familiar with redux, they are conceptually somewhat similar to a [`thunk`](https://redux.js.org/usage/writing-logic-thunks#what-is-a-thunk.
-Here are some examples of commonly needed effects
+Sometimes your app might need to react to things happening in the environment.
+Subscriptions help you set up and remove Event Listeners in a clean way.
+Use the subscriptions in the `subscriptions()` function, passed to `createApp()`.
 
 ## Subscriping to a Time Interval
 
