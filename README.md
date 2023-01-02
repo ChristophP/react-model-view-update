@@ -134,6 +134,16 @@ Yes, `createApp` has a generic type signature. So you can use it like this in Ty
 const App = createApp<Model, Msg>({ init, update, view, subscriptions });
 ```
 
+### Should't I keep my `update()` function free some side-effects?
+
+Yes, absolutely. Returning the effects from `update()` doesn't violate this though, because `update()` simply returns them.
+The effects a are executed by the framework NOT in the `update()` function itself. This makes it safe to run the `update()`
+function and easy to test.
+
+### Where can I see examples of effects and subscriptions?
+
+Here are some effect examples and subscriptions examples.
+
 ### Can I still use local state?
 
 Yes, everything in the `view()` function is still plain react, so [hooks](https://reactjs.org/docs/hooks-intro.html) etc are available.
@@ -153,6 +163,35 @@ the `useSendMsg` hook will give you easy access to the message triggering functi
 There is no such hook for accessing the model, because usually with good model design, data is passed down to components quite naturally.
 If you find yourself struggling with that, please open an issue.
 
+### What about testing?
+
+The functions are best tested in isolation.
+
+#### `init() / update()`
+
+It's best to run the init function and assert the expected model.
+The effects
+
+```js
+// init
+const [model, effects] = init();
+expect(model).toEqual(expectedModel);
+
+// update
+const [newModel, effects] = update({ type: "someMsg" }, someModel);
+expect(newModel).toEqual(expectedModel);
+```
+
+Effects are a bit harder to test, since they are not just plain input/output. For many testing the model is enough for others this propably requires mocking.
+
+#### `view()`
+
+To test the output of the view function you probably wanna use something like the [React Testing library](https://testing-library.com/docs/react-testing-library/intro/).
+
+#### `subscriptions()`
+
+Also a bit harder to test because this requires side-effects. This probably also requires mocking. If you keep the subscriptions simple you can probably get by without tests.
+
 ## API
 
 For the complete docs check the API docs.
@@ -160,3 +199,11 @@ For the complete docs check the API docs.
 - `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
 - `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. It's mainly for convenience, so you don't have to pass down `sendMsg()` in deep component hierarchies. Think of `sendMsg()` like `dispatch()`.
 
+## Prior Art
+
+Many languages, libraries and framworks have influenced this library. Here is a quick overview over the most relevant ones. Thanks to all ❤️ 
+- The [Elm](https://elm-lang.org) programming language and its [Elm architecture](https://guide.elm-lang.org/architecture/)
+- [Redux](https://redux.js.org/) as a state management solution
+- [Redux loop](https://github.com/redux-loop/redux-loop): A redux middleware aiming to port Model-Update-View pattern to redux
+- [React Tea Cup](https://github.com/vankeisb/react-tea-cup): A fantastic port of The Elm Architecture to React. It resembles Elm closely, comes with a full system of effects and subscriptions and has great docs. `react-model-update-view` tries to be minimal and focuses on the basics.
+- [Hyperapp](https://github.com/jorgebucaran/hyperapp) is a tiny microframework that follows similar pattern
