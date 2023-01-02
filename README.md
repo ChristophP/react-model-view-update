@@ -142,7 +142,7 @@ function and easy to test.
 
 ### Where can I see examples of effects and subscriptions?
 
-Here are some effect examples and subscriptions examples.
+Here are some [effect examples](docs/Effects.md) and [subscriptions examples](docs/Subscriptions.md).
 
 ### Can I still use local state?
 
