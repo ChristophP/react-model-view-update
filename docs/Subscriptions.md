@@ -2,7 +2,12 @@
 
 Sometimes your app might need to react to things happening in the environment.
 Subscriptions help you set up and remove Event Listeners in a clean way.
-Use the subscriptions in the `subscriptions()` function, passed to `createApp()`.
+Return the subscriptions in the `subscriptions()` function, passed to `createApp()`.
+
+Here are some examples of commonly needed subscriptions:
+
+*They are kept short for brevity so often the message is hardcoded. In order to make the subscription more
+reusable you may want to pass in the message or message-creating-function as a parameter*
 
 ## Subscriping to a Time Interval
 

@@ -2,7 +2,7 @@
 
 Effects help your app to interact the outside world through Browser APIs.
 If you're familiar with redux, they are conceptually somewhat similar to a [`thunk`](https://redux.js.org/usage/writing-logic-thunks#what-is-a-thunk).
-Returns the effects from the `init()` and `update()` functions passed to `createApp()`.
+Return the effects from the `init()` and `update()` functions passed to `createApp()`.
 Here are some examples of commonly needed effects:
 
 ## HTTP requests
