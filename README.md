@@ -28,10 +28,10 @@ This pattern (also known as the Elm architecture) breaks down an app into 4 main
 
 function | description
 ---      |  ----    
-**init** | A function which returns the initial value for your model and a list of effects. Runs once after your app renders for the first time.
-**update** | A function that gets messages, the current model and computes and returns a new model (reducer) and a list of effects. Runs whenever events happen.
-**view** |A function that gets the model and a message dispatching function and returns some JSX.
-**subscriptions** | A function that sets up event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the model changes.
+**init** | Initialize your app by returning a tuple of your initial model and any effects you want to run. Runs only once when `createApp()` is called.
+**update** | A function that gets messages, the current model and computes and returns a new model (reducer) and a list of effects. Runs whenever messages are send (via `sendMsg`). 
+**view** | A function that gets the model and a message dispatching function and returns some JSX. Called whenever `update()` has run. 
+**subscriptions** | A function that sets up and removes event listeners to events external to the application like timers, sockets, or clicks on the document and dispatches new messages. Runs whenever the model changes.
 
 ## Installing
 
@@ -194,7 +194,7 @@ Also a bit harder to test because this requires side-effects. This probably also
 
 ## API
 
-For the complete docs check the API docs.
+For the complete docs check the [API docs](docs/Api.md).
 
 - `createApp({ init, update, view, subscriptions })`: Create an app. This function returns a React component you can use in your JSX as a top level element or child.
 - `useSendMsg()`: A hook to get the `sendMsg()` function, to trigger `update()`. It's mainly for convenience, so you don't have to pass down `sendMsg()` in deep component hierarchies. Think of `sendMsg()` like `dispatch()`.
