@@ -8,7 +8,7 @@ type Implementation<Model, Msg> = {
   init: () => [Model, Effect<Msg>[]];
   update: (msg: Msg, model: Model) => [Model, Effect<Msg>[]];
   view: (model: Model, sendMsg: SendMsgFn<Msg>) => JSX.Element;
-  subscriptions: (model: Model) => Sub<Msg>[];
+  subscriptions: (model: Model) => Subscription<Msg>[];
 };
 
 // the function which takes a message and triggers updates
@@ -19,7 +19,7 @@ type Effect<Msg> = (sendMsg: SendMsgFn<Msg>) => void;
 
 // subscriptions are functions, which accept sendMsg and set up an event listener.
 // They return a function that - when called - will unsubscribe the listener
-type Sub<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
+type Subscription<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
 ```
 
 ## `createApp<Model, Msg>(Implementation<Model, Msg>): () => JSX.Element` 
@@ -41,7 +41,7 @@ A function that gets messages, the current model and computes and returns a new 
 
 A function that gets the model and a message dispatching function and returns some JSX. Called whenever `update()` has run.
 
-### `subscriptions(model: Model) => Sub<Msg>[]`
+### `subscriptions(model: Model) => Subscription<Msg>[]`
 
 A function that sets up and removes event listeners to things like timers, web sockets, or clicks on the document.
 The result of `subscriptions()` is cached internally. 

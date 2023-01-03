@@ -4,7 +4,7 @@ import {
   createApp,
   useSendMsg,
   Implementation,
-  Sub,
+  Subscription,
   Effect,
   SendMsgFn,
 } from "./model-update-view";
@@ -139,7 +139,7 @@ describe("effects", () => {
 });
 
 describe("subscriptions", () => {
-  const documentClickSubscription: Sub<Msg> = (sendMsg) => {
+  const documentClickSubscription: Subscription<Msg> = (sendMsg) => {
     const listener = () => {
       sendMsg({ type: "documentClick" });
     };
@@ -150,7 +150,7 @@ describe("subscriptions", () => {
   };
 
   const eventTarget = new EventTarget();
-  const manualTriggerSubscription: Sub<Msg> = (sendMsg) => {
+  const manualTriggerSubscription: Subscription<Msg> = (sendMsg) => {
     const listener = (event: Event) => {
       sendMsg((event as CustomEvent).detail);
     };

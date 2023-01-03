@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 
 export type SendMsgFn<Msg> = (msg: Msg) => void;
 export type Effect<Msg> = (sendMsg: SendMsgFn<Msg>) => void;
-export type Sub<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
+export type Subscription<Msg> = (sendMsg: SendMsgFn<Msg>) => () => void;
 type SubManager<Model, Msg> = (
   model: Model | null,
   sendMsg: SendMsgFn<Msg>
@@ -12,7 +12,7 @@ export type Implementation<Model, Msg> = {
   init: () => [Model, Effect<Msg>[]];
   update: (msg: Msg, model: Model) => [Model, Effect<Msg>[]];
   view: (model: Model, sendMsg: SendMsgFn<Msg>) => JSX.Element;
-  subscriptions: (model: Model) => Sub<Msg>[];
+  subscriptions: (model: Model) => Subscription<Msg>[];
 };
 
 // msg triggering
@@ -81,7 +81,7 @@ function useSubscriptions<Model, Msg>(
 
 // subscriptions management
 function createSubscriptionsManager<Model, Msg>(
-  mapStateToSubs: (model: Model) => Sub<Msg>[]
+  mapStateToSubs: (model: Model) => Subscription<Msg>[]
 ): SubManager<Model, Msg> {
   const lastSubs = new Map();
 
